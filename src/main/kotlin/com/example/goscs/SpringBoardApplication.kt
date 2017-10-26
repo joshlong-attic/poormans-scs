@@ -15,7 +15,7 @@ import java.time.Duration
 class SpringBoardApplication {
 
     @Bean
-    fun run(@Value("file:///\${SCS_ROOT:\${user.home}/Desktop/spring-cloud-services}") dir: Resource)
+    fun run(@Value("file:///\${SCS_ROOT}") dir: Resource)
             = ApplicationRunner {
 
         dir
@@ -23,7 +23,7 @@ class SpringBoardApplication {
                 .run {
                     Flux.just("config-service", "eureka-service", "zipkin-service").map { File(this, it) }
                 }
-                .subscribeOn(Schedulers.elastic()) // we want all three running at once, so concurrent scheduling is important
+                .subscribeOn(Schedulers.elastic())
                 .map {
                     ProcessBuilder("/bin/bash")
                             .directory(it)
